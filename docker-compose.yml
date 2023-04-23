@@ -1,7 +1,7 @@
 version: "3.8"
 
 x-env-api: &api-env-variables
-    YII_DEBUG: true
+    YII_DEBUG: "true"
     YII_ENV: dev
     YII_LOG_LEVELS: error,warning
     APP_NAME: Bintime TT

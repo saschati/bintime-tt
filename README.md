@@ -41,3 +41,10 @@ api-logs                       Show logs
 api-lint                       Run lints
 api-fix                        Run lint fixer
 ```
+
+## Dependencies
+
+### API
+- PHP:8.1
+- PostgreSQL:14.4
+- Nginx:1.23
