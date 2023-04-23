@@ -1,4 +1,4 @@
-version: "3.9"
+version: "3.8"
 
 x-env-api: &api-env-variables
     YII_DEBUG: true
@@ -38,7 +38,6 @@ services:
             - traefik.docker.network=traefik-public
         depends_on:
             - api
-#            - frontend
 
     api:
         build:

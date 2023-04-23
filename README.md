@@ -16,7 +16,7 @@
 ## Host info
 
 API: [http://api.localhost/](http://api.localhost/)<br/>
-DOCS: [http://api.localhost/](http://api.localhost/docs/index.html)<br/>
+DOCS: [http://api.localhost/docs/index.html](http://api.localhost/docs/index.html)<br/>
 
 ### Available commands
 ```make help```
