@@ -1,0 +1,11 @@
+<?php
+
+declare(strict_types=1);
+
+namespace App\Models\User\UseCase\User\JoinByEmail\Request\Chunk;
+
+class Name
+{
+    public string $firstName = '';
+    public string $lastName = '';
+}

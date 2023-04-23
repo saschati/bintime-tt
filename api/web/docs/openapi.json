@@ -1,0 +1,879 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "Bintime TT",
+        "description": "HTTP JSON API.",
+        "version": "1.0.0"
+    },
+    "servers": [
+        {
+            "url": "http://api.localhost/api",
+            "description": "Api Bintime TT"
+        }
+    ],
+    "paths": {
+        "/api": {
+            "servers": [
+                {
+                    "url": "http://api.localhost/api",
+                    "description": "Api Bintime TT"
+                }
+            ]
+        },
+        "/users/{id}/tasks": {
+            "get": {
+                "tags": [
+                    "User.Task"
+                ],
+                "description": "Get the user's task list.",
+                "operationId": "UserTaskAllTasks",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid",
+                            "example": "1da2e2c6-e904-4350-9c1e-d8fdcaaf7a99"
+                        }
+                    },
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "description": "Page Number",
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "sort",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "startedAt",
+                                "-startedAt",
+                                "title",
+                                "-title",
+                                "description",
+                                "-description"
+                            ]
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Ok",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/App\\OpenApi\\User\\TaskPaginateSchema"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "User.Task"
+                ],
+                "description": "Create a new task for the user.",
+                "operationId": "UserTaskCreateNew",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/App\\Http\\Forms\\User\\User\\Task\\CreateNewForm"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/App\\Http\\Response\\Responder\\User\\User\\TaskResponder"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/App\\Http\\Response\\Responder\\Error\\ViolationResponder"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/App\\Http\\Response\\Responder\\Error\\NotFoundResponder"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Unprocessable Entity",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/App\\Http\\Response\\Responder\\Error\\EntityResponder"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/users/{id}/tasks/stats": {
+            "get": {
+                "tags": [
+                    "User.Task"
+                ],
+                "description": "Get stats a task for the user.",
+                "operationId": "UserTaskAllStatsByUser",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid",
+                            "example": "1da2e2c6-e904-4350-9c1e-d8fdcaaf7a99"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Ok",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/App\\Http\\Response\\Responder\\User\\User\\TaskStatsResponder"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/tasks/stats": {
+            "get": {
+                "tags": [
+                    "User.Task"
+                ],
+                "description": "Get all stats for all users.",
+                "operationId": "UserTaskAllStats",
+                "responses": {
+                    "200": {
+                        "description": "Ok",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/App\\Http\\Response\\Responder\\User\\User\\TaskStatsResponder"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/users/{id}/tasks/{taskId}": {
+            "put": {
+                "tags": [
+                    "User.Task"
+                ],
+                "description": "Update task content for user.",
+                "operationId": "UserTaskEdit",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid",
+                            "example": "1da2e2c6-e904-4350-9c1e-d8fdcaaf7a99"
+                        }
+                    },
+                    {
+                        "name": "taskId",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid",
+                            "example": "1da2e2c6-e904-4350-9c1e-d8fdcaaf7a99"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/App\\Http\\Forms\\User\\User\\Task\\EditForm"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/App\\Http\\Response\\Responder\\User\\User\\TaskResponder"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/App\\Http\\Response\\Responder\\Error\\ViolationResponder"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/App\\Http\\Response\\Responder\\Error\\NotFoundResponder"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Unprocessable Entity",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/App\\Http\\Response\\Responder\\Error\\EntityResponder"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "User.Task"
+                ],
+                "description": "Delete a task for a user.",
+                "operationId": "UserTaskDelete",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid",
+                            "example": "1da2e2c6-e904-4350-9c1e-d8fdcaaf7a99"
+                        }
+                    },
+                    {
+                        "name": "taskId",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid",
+                            "example": "1da2e2c6-e904-4350-9c1e-d8fdcaaf7a99"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "No Content",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/App\\Http\\Response\\Responder\\Error\\NotFoundResponder"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Unprocessable Entity",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/App\\Http\\Response\\Responder\\Error\\EntityResponder"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/users": {
+            "get": {
+                "tags": [
+                    "User"
+                ],
+                "description": "Get a list of available users, broken down by pages and sorted.",
+                "operationId": "UserAllUsers",
+                "parameters": [
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "description": "Page Number",
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "sort",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "registeredAt",
+                                "-registeredAt",
+                                "firstName",
+                                "-firstName",
+                                "lastName",
+                                "-lastName",
+                                "email",
+                                "-email"
+                            ]
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Ok",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/App\\OpenApi\\User\\UserPaginateSchema"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "User"
+                ],
+                "description": "Create a new user by email.",
+                "operationId": "UserJoinByEmail",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/App\\Http\\Forms\\User\\User\\JoinByEmailForm"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/App\\Http\\Response\\Responder\\User\\User\\UserResponder"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/App\\Http\\Response\\Responder\\Error\\ViolationResponder"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/App\\Http\\Response\\Responder\\Error\\NotFoundResponder"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Unprocessable Entity",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/App\\Http\\Response\\Responder\\Error\\EntityResponder"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/users/{id}": {
+            "put": {
+                "tags": [
+                    "User"
+                ],
+                "description": "Update user by id.",
+                "operationId": "UserEditProfile",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid",
+                            "example": "1da2e2c6-e904-4350-9c1e-d8fdcaaf7a99"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/App\\Http\\Forms\\User\\User\\EditProfileForm"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/App\\Http\\Response\\Responder\\User\\User\\UserResponder"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/App\\Http\\Response\\Responder\\Error\\ViolationResponder"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/App\\Http\\Response\\Responder\\Error\\NotFoundResponder"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Unprocessable Entity",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/App\\Http\\Response\\Responder\\Error\\EntityResponder"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "User"
+                ],
+                "description": "Delete user by id.",
+                "operationId": "UserDeleteProfile",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid",
+                            "example": "1da2e2c6-e904-4350-9c1e-d8fdcaaf7a99"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "No Content",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/App\\Http\\Response\\Responder\\Error\\NotFoundResponder"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Unprocessable Entity",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/App\\Http\\Response\\Responder\\Error\\EntityResponder"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "App\\Http\\Forms\\User\\User\\EditProfileForm": {
+                "required": [
+                    "name",
+                    "username",
+                    "email",
+                    "password"
+                ],
+                "properties": {
+                    "name": {
+                        "$ref": "#/components/schemas/App\\Http\\Forms\\User\\User\\NameType"
+                    },
+                    "username": {
+                        "type": "string"
+                    },
+                    "email": {
+                        "type": "string",
+                        "format": "email"
+                    },
+                    "password": {
+                        "type": "string",
+                        "format": "password"
+                    }
+                },
+                "type": "object"
+            },
+            "App\\Http\\Forms\\User\\User\\JoinByEmailForm": {
+                "required": [
+                    "name",
+                    "username",
+                    "email",
+                    "password"
+                ],
+                "properties": {
+                    "name": {
+                        "$ref": "#/components/schemas/App\\Http\\Forms\\User\\User\\NameType"
+                    },
+                    "username": {
+                        "type": "string"
+                    },
+                    "email": {
+                        "type": "string",
+                        "format": "email"
+                    },
+                    "password": {
+                        "type": "string",
+                        "format": "password"
+                    }
+                },
+                "type": "object"
+            },
+            "App\\Http\\Forms\\User\\User\\NameType": {
+                "required": [
+                    "firstName",
+                    "lastName"
+                ],
+                "properties": {
+                    "firstName": {
+                        "type": "string"
+                    },
+                    "lastName": {
+                        "type": "string"
+                    }
+                },
+                "type": "object"
+            },
+            "App\\Http\\Forms\\User\\User\\Task\\CreateNewForm": {
+                "required": [
+                    "title",
+                    "description",
+                    "startedAt"
+                ],
+                "properties": {
+                    "title": {
+                        "type": "string"
+                    },
+                    "description": {
+                        "type": "string"
+                    },
+                    "startedAt": {
+                        "type": "string",
+                        "example": "2023-04-22 15:03"
+                    }
+                },
+                "type": "object"
+            },
+            "App\\Http\\Forms\\User\\User\\Task\\EditForm": {
+                "required": [
+                    "title",
+                    "description",
+                    "status",
+                    "startedAt"
+                ],
+                "properties": {
+                    "title": {
+                        "type": "string"
+                    },
+                    "description": {
+                        "type": "string"
+                    },
+                    "status": {
+                        "type": "string",
+                        "enum": [
+                            "new",
+                            "in_progress",
+                            "failed",
+                            "finished"
+                        ]
+                    },
+                    "startedAt": {
+                        "type": "string",
+                        "example": "2023-04-22 15:03"
+                    }
+                },
+                "type": "object"
+            },
+            "App\\Http\\Response\\Responder\\Error\\EntityResponder": {
+                "properties": {
+                    "errors": {
+                        "properties": {
+                            "code": {
+                                "type": "integer"
+                            },
+                            "message": {
+                                "type": "string"
+                            }
+                        },
+                        "type": "object"
+                    }
+                },
+                "type": "object"
+            },
+            "App\\Http\\Response\\Responder\\Error\\NotFoundResponder": {
+                "properties": {
+                    "errors": {
+                        "properties": {
+                            "code": {
+                                "type": "integer"
+                            },
+                            "message": {
+                                "type": "string"
+                            }
+                        },
+                        "type": "object"
+                    }
+                },
+                "type": "object"
+            },
+            "App\\Http\\Response\\Responder\\Error\\ViolationResponder": {
+                "properties": {
+                    "errors": {
+                        "properties": {
+                            "data": {
+                                "type": "object"
+                            },
+                            "message": {
+                                "type": "string"
+                            }
+                        },
+                        "type": "object"
+                    }
+                },
+                "type": "object"
+            },
+            "App\\Http\\Response\\Responder\\User\\User\\TaskResponder": {
+                "properties": {
+                    "id": {
+                        "type": "string",
+                        "format": "uuid"
+                    },
+                    "title": {
+                        "type": "string"
+                    },
+                    "description": {
+                        "type": "string",
+                        "format": "email"
+                    },
+                    "status": {
+                        "type": "string"
+                    },
+                    "startedAt": {
+                        "type": "string",
+                        "example": "2023-04-22 15:03"
+                    }
+                },
+                "type": "object"
+            },
+            "App\\Http\\Response\\Responder\\User\\User\\TaskStatsResponder": {
+                "properties": {
+                    "status": {
+                        "type": "string",
+                        "enum": [
+                            "new",
+                            "in_progress",
+                            "failed",
+                            "finished"
+                        ]
+                    },
+                    "count": {
+                        "type": "integer"
+                    }
+                },
+                "type": "object"
+            },
+            "App\\Http\\Response\\Responder\\User\\User\\UserResponder": {
+                "properties": {
+                    "id": {
+                        "type": "string",
+                        "format": "uuid"
+                    },
+                    "username": {
+                        "type": "string"
+                    },
+                    "email": {
+                        "type": "string",
+                        "format": "email"
+                    },
+                    "name": {
+                        "properties": {
+                            "firstName": {
+                                "type": "string"
+                            },
+                            "lastName": {
+                                "type": "string"
+                            }
+                        },
+                        "type": "object"
+                    },
+                    "registeredAt": {
+                        "type": "string",
+                        "example": "2023-04-22 15:03"
+                    }
+                },
+                "type": "object"
+            },
+            "Pagination": {
+                "properties": {
+                    "meta": {
+                        "properties": {
+                            "currentPage": {
+                                "type": "integer"
+                            },
+                            "perPage": {
+                                "type": "integer"
+                            },
+                            "totalCount": {
+                                "type": "integer"
+                            },
+                            "pageCount": {
+                                "type": "integer"
+                            }
+                        },
+                        "type": "object"
+                    }
+                },
+                "type": "object"
+            },
+            "App\\OpenApi\\User\\TaskPaginateSchema": {
+                "type": "object",
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/Pagination"
+                    },
+                    {
+                        "properties": {
+                            "data": {
+                                "$ref": "#/components/schemas/App\\Http\\Response\\Responder\\User\\User\\TaskResponder"
+                            }
+                        }
+                    }
+                ]
+            },
+            "App\\OpenApi\\User\\UserPaginateSchema": {
+                "type": "object",
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/Pagination"
+                    },
+                    {
+                        "properties": {
+                            "data": {
+                                "$ref": "#/components/schemas/App\\Http\\Response\\Responder\\User\\User\\UserResponder"
+                            }
+                        }
+                    }
+                ]
+            }
+        }
+    },
+    "tags": [
+        {
+            "name": "User",
+            "description": "A list of methods for the user."
+        },
+        {
+            "name": "User.Task",
+            "description": "List of methods for user tasks."
+        }
+    ],
+    "x-tagGroups": [
+        {
+            "name": "User",
+            "tags": [
+                "User",
+                "User.Task"
+            ]
+        }
+    ]
+}

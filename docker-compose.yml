@@ -1,0 +1,102 @@
+version: "3.9"
+
+x-env-api: &api-env-variables
+    YII_DEBUG: true
+    YII_ENV: dev
+    YII_LOG_LEVELS: error,warning
+    APP_NAME: Bintime TT
+    APP_URL: http://api.localhost
+    COOKIE_KEY: 7Q_GLDQIcf7C1dYsH1HtvbqbYeX2ChDD
+    DB_HOST: api-postgres
+    DB_DATABASE: app
+    DB_USER: app
+    DB_PORT: 5432
+    DB_PASSWORD: secret
+    DB_TABLE_PREFIX: p_
+
+services:
+
+    reverse-proxy:
+        image: traefik:v2.9
+        command:
+            --api.insecure=true
+            --providers.docker=true
+            --providers.docker.exposedByDefault=false
+            --providers.docker.network=traefik-public
+            --entryPoints.http.address=:80
+        ports:
+            # The HTTP port
+            - "80:80"
+            # The Web UI (enabled by --api.insecure=true)
+            - "8080:8080"
+        networks:
+            - traefik-public
+        volumes:
+            - /var/run/docker.sock:/var/run/docker.sock
+        labels:
+            - traefik.enable=true
+            - traefik.docker.network=traefik-public
+        depends_on:
+            - api
+#            - frontend
+
+    api:
+        build:
+            context: api/docker
+            dockerfile: development/nginx/Dockerfile
+        volumes:
+            - ./api:/app
+        networks:
+            - traefik-public
+            - default
+        labels:
+            - traefik.enable=true
+            - traefik.docker.network=traefik-public
+            - traefik.http.routers.api.rule=Host(`api.localhost`)
+            - traefik.http.routers.api.entryPoints=http
+            - traefik.http.services.api.loadBalancer.server.port=80
+
+    api-php-fpm:
+        container_name: api-php-fpm
+        build:
+            context: api/docker
+            dockerfile: development/php-fpm/Dockerfile
+        environment:
+            <<: *api-env-variables
+        volumes:
+            - ./api:/app
+        depends_on:
+            - api-postgres
+
+    api-php-cli:
+        container_name: api-php-cli
+        build:
+            context: api/docker
+            dockerfile: development/php-cli/Dockerfile
+        environment:
+            <<: *api-env-variables
+        volumes:
+            - ./api:/app
+            - composer:/root/.composer/cache
+        depends_on:
+            - api-postgres
+
+    api-postgres:
+        container_name: api-postgres
+        image: postgres:14.4-alpine
+        environment:
+            POSTGRES_USER: app
+            POSTGRES_PASSWORD: secret
+            POSTGRES_DB: app
+        volumes:
+            - db:/var/lib/postgresql/data
+        ports:
+            - "54321:5432"
+
+volumes:
+    composer:
+    db:
+
+networks:
+    traefik-public:
+        name: traefik-public
